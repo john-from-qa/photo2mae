@@ -84,7 +84,7 @@ def generate_mae_from_img(input_png, output_mae, depth_scale, mode, hollow, gamm
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--img", required=True)
-    parser.add_argument("--out", default="spectrum_dog.mae")
+    parser.add_argument("--out", default="photo-out.mae")
     parser.add_argument("--mode", choices=["project", "voxel"], default="project")
     parser.add_argument("--hollow", action="store_true")
     parser.add_argument("--dither", action="store_true")
