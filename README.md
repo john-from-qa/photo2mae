@@ -9,6 +9,8 @@ Check --help for usage
 
 
 ## Results
+![Cat](examples/Frank242Katoms.png)
+
 
 | Maestro GIF |
 | :---: |
