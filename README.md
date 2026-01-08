@@ -10,6 +10,6 @@ Check --help for usage
 
 ## Results
 
-| Input PNG | 3D Molecular Output (.mae) |
-| :---: | :---: |
+| Maestro GIF |
+| :---: |
 ![3D Maestro GIF](examples/bad_gat.gif)
