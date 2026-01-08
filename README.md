@@ -1,2 +1,5 @@
 # photo2mae
-generate a mae file from a photo
+For art, nothing scientific about it. 
+Generate a mae file from a photo (png, jpg).
+Requires pillow (pip install pillow)
+Check --help for usage
