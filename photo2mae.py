@@ -43,7 +43,6 @@ def generate_mae_from_img(args):
             rc, gc, bc = [max(0, min(255, int(f * (c - 128) + 128))) for c in (r, g, b)]
             rn, gn, bn = [(max(0, min(255, int(255 * (c/255)**applied_gamma))) / 255.0) for c in (rc, gc, bc)]
             
-            # The Hex code Maestro uses for direct color mapping
             hex_color = "{:02x}{:02x}{:02x}".format(int(rn*255), int(gn*255), int(bn*255)).upper()
             
             brightness = (rn + gn + bn) / 3.0
@@ -51,7 +50,6 @@ def generate_mae_from_img(args):
             pos_y = (height/2 - y) * 0.1 * args.scale
             z_val = brightness * args.depth * args.scale
 
-            # Hollow/Voxel logic
             z_range = [z_val] if args.mode == "project" else range(-int(z_val*3), int(z_val*3) + 1)
 
             for z_step in z_range:
@@ -60,12 +58,14 @@ def generate_mae_from_img(args):
                 jx, jy, jz = [p + random.uniform(-args.jitter, args.jitter) * args.scale for p in (pos_x, pos_y, pos_z)]
 
                 # --- NATIVE HIGH-FIDELITY SCHEMA (25 COLUMNS) ---
-                # We use the verified sequence: Serial, B, G, R to ensure the colors 'stick'
                 serial = 50000 + atom_idx
                 atom_line = (f" {atom_idx:>7} 3 {jx:10.4f} {jy:10.4f} {jz:10.4f} 1 \"A\" 1 \"    \" \" C  \" 6 3 "
                              f"{hex_color} C{serial} 0 3 \"\" 2 \"\" {serial} {bn:.4f} {gn:.4f} {rn:.4f} 1 1 IMG")
                 atom_data.append(atom_line)
                 atom_idx += 1
+
+    # --- RESTORED METADATA FEATURE ---
+    metadata = f"M:{args.mode}|D:{args.depth}|G:{applied_gamma:.1f}|C:{applied_contrast:.0f}|H:{args.hollow}"
 
     header = f"""{{ 
  s_m_m2io_version 
@@ -74,9 +74,15 @@ def generate_mae_from_img(args):
 }} 
 f_m_ct {{ 
  s_m_title 
+ s_m_entry_id 
+ s_m_entry_name 
+ i_m_ct_format 
  ::: 
- "Photo2MAE_Master_Studio" 
-  m_atom[{len(atom_data)}] {{ 
+ "{metadata}" 
+ 1 
+ "{metadata}" 
+  2 
+ m_atom[{len(atom_data)}] {{ 
   i_m_mmod_type 
   r_m_x_coord 
   r_m_y_coord 
@@ -137,4 +143,4 @@ if __name__ == "__main__":
     
     count = generate_mae_from_img(args)
     if count > 0:
-        print(f"-> Success! {args.out} created with {count} atoms.")
+        print(f"-> Success! Created {args.out} with recipe title.")
